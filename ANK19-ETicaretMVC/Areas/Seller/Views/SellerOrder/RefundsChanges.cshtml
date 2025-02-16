@@ -1,0 +1,85 @@
+﻿@{
+    Layout = "~/Views/Shared/_SellerLayout.cshtml";
+}
+
+@model List<GetRefundChangesViewModel>
+
+
+    
+@if (ViewBag.DeleteMessage != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @ViewBag.DeleteMessage     
+    </div>
+}
+@if (ViewBag.RequestApproveMessage != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @ViewBag.RequestApproveMessage
+    </div>
+}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">İade ve Değişim Talepleri</h2>
+    <table class="table table-bordered table-striped text-center">
+        <thead class="table-primary">
+            <tr>
+                <th>Ürün ID</th>
+                <th>Ürün Adı</th>
+                <th>Kullanıcı Adı</th>
+                <th>Tarih</th>
+                <th>İstek</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @if (Model != null && Model.Any())
+            {
+                foreach (var refund in Model)
+                {
+                    <tr>
+                        <!-- Ürün ID -->
+                        <td class="align-middle">@refund.ProductId</td>
+
+                        <!-- Ürün Adı -->
+                        <td class="align-middle">@refund.Product.Name</td>
+
+                        <!-- Kullanıcı Adı -->
+                        <td class="align-middle">@refund.User.Username</td>
+
+                        <!-- Tarih -->
+                        <td class="align-middle">@refund.CreatedDate.ToString("dd/MM/yyyy")</td>
+
+                        <!-- İstek -->
+                        <td class="align-middle">
+                            @(refund.Request == ANK19_ETicaretMVC.Enums.RequestType.Refund ? "İade" : "Değişim")
+                        </td>
+
+                        <!-- İşlemler -->
+                        <td class="align-middle">
+                            <form method="post" asp-action="ApproveRefundChange" class="d-inline">
+                                <input type="hidden" name="userId" value="@refund.UserId" />
+                                <input type="hidden" name="productId" value="@refund.ProductId" />
+                                <input type="hidden" name="request" value="@refund.Request" />
+                                <input type="hidden" name="requestId" value="@refund.Id" />
+                                <button type="submit" class="btn btn-success">Onayla</button>
+                            </form>
+
+                            <form method="post" asp-action="DeleteRequest" class="d-inline ms-2">
+                                <input type="hidden" name="requestId" value="@refund.Id" />
+                                <button type="submit" class="btn btn-danger">Reddet</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center">Gösterilecek iade veya değişim talebi yok.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

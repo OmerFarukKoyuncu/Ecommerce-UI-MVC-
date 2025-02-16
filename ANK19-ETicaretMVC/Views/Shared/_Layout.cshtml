@@ -1,0 +1,140 @@
+﻿@{
+    var sessionUser = Context.Session.GetString("LoggedInUser");
+    var user = !string.IsNullOrEmpty(sessionUser) ? JsonConvert.DeserializeObject<UserViewModel>(sessionUser) : null;
+    var token = Context.Session.GetString("JwtToken");
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ANK19_ETicaretMVC</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ANK19_ETicaretMVC.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="https://p1.hiclipart.com/preview/845/670/469/ecommerce-logo-shopping-cart-online-shopping-shopping-centre-shopping-cart-software-shopping-bag-pink-vehicle-png-clipart.jpg" width="120px" height="120px" /></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (token != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AboutUs">Hakkımızda</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ContactUs">İletişim</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="Customer" asp-action="Index" asp-controller="ShopCart">ShopCart</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">User Management</a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product Management</a></li>
+                                </ul>
+                            </li>
+                        }
+                        <!-- Admin Dropdown -->
+                    </ul>
+                </div>
+                <!-- User Login/Register buttons -->
+                <div>
+                    @if (user == null)
+                    {
+                        <div id="loginregister" class="p-3">
+                            <form action="@Url.Action("Login", "User", new { area = "Admin" })" method="post" class="form-inline">
+
+                                <!-- Email/Username ve Password Alanları -->
+                                <div class="row gx-2 mb-3">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control form-control-sm" placeholder="Username" name="Username" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="password" class="form-control form-control-sm" placeholder="Password" name="password" required>
+                                    </div>
+                                </div>
+
+                                <!-- Login, Register ve Forgot Password -->
+                                <div class="row gx-2">
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-outline-primary btn-sm w-100">Login</button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a class="btn btn-link btn-sm w-100" asp-action="Register" asp-controller="Account">Register</a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a class="btn btn-link btn-sm w-100" href="#">Forgot Password?</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="@user.PictureURL" class="img-thumbnail mb-3" alt="@user?.Name" width="100" height="100" />
+                            <div class="btn-group">
+                                @if (user.isAdmin)
+                                {
+                                    <!-- Admin Dropdown -->
+                                    <ul>
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Admin
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">User Management</a></li>
+                                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product Management</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                }
+                                <a class="btn btn-outline-secondary btn-sm" asp-action="Orders" asp-controller="Basket" asp-route-username="@(user.Username.ToString())">Basket</a>
+                                <a class="btn btn-outline-success btn-sm" asp-action="Details" asp-controller="Account" asp-route-username="@(user.Username.ToString())">Profile</a>
+                                <a class="btn btn-outline-danger btn-sm" href="/Admin/User/Logout">Logout</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </nav>
+
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - ANK19_ETicaretMVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

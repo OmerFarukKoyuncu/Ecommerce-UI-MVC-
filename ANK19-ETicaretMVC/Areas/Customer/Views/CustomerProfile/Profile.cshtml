@@ -1,0 +1,67 @@
+﻿@using ANK19_ETicaretMVC.Areas.Customer.Models.CustomerProfileViewModels
+@model CustomerViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+}
+@{
+    ViewData["Title"] = "Customer Profile";
+}
+
+<style>
+    .profile-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 40px;
+    }
+
+    .profile-card {
+        width: 100%;
+        max-width: 800px; 
+        border-radius: 15px;
+        padding: 40px;
+    }
+
+    .profile-image {
+        width: 180px;
+        height: 180px;
+        object-fit: cover;
+        border: 5px solid #ddd;
+    }
+
+    .btn-rounded {
+        border-radius: 25px;
+        padding: 10px 20px;
+    }
+</style>
+
+<!-- Sayfanın tamamına yayılan container -->
+<div class="container-fluid profile-container d-flex justify-content-center align-items-center">
+    <!-- Profil Kartı -->
+    <div class="card shadow-lg profile-card">
+        <!-- Profil Resmi -->
+        <div class="text-center mb-3">
+            <img src="@Model.ProfilePictureUrl"
+                 class="rounded-circle img-thumbnail profile-image"
+                 alt="@Model.Firstname @Model.Lastname's profile picture">
+        </div>
+
+        <!-- Kullanıcı Bilgileri -->
+        <div class="text-center">
+            <h2>@Model.Firstname @Model.Lastname</h2>
+            <p class="text-muted">@Model.UserName</p>
+        </div>
+
+        <!-- Adres Bilgisi -->
+        <div class="mt-4">
+            <p><strong>Adres:</strong> @Model.Address</p>
+        </div>
+
+        <!-- Düzenleme Butonu -->
+        <div class="text-center mt-4">
+            <form action="@Url.Action("UpdateProfile", "CustomerProfile")" method="get">
+                <button type="submit" class="btn btn-primary btn-rounded">Profili Güncelle</button>
+            </form>
+        </div>
+    </div>
+</div>

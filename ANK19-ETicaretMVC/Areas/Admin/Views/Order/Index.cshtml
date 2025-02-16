@@ -1,0 +1,80 @@
+﻿@using ANK19_ETicaretMVC.ViewModels.OrderViewModels
+@using DAL.Enums
+@model IEnumerable<OrderListViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    else if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+}
+
+<h1>Sipariş Listesi</h1>
+
+<hr />
+<div class="row mb-3">
+    <div class="col-md-12">
+        <form method="get" asp-action="GetOrderById" asp-controller="Order" style="display: flex; align-items: center;">
+            <input type="text" name="searchId" class="form-control" placeholder="Sipariş numarası giriniz..." style="max-width: 300px; margin-right: 10px;" value="@ViewData["SearchId"]" />
+            <button type="submit" class="btn btn-primary">Ara</button>
+        </form>
+    </div>
+</div>
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="font-weight: bold; padding: 10px;">Sipariş Numarası</th>
+                    <th style="font-weight: bold; padding: 10px;">Sipariş Sahibi</th>
+                    <th style="font-weight: bold; padding: 10px;">Sipariş Tarihi</th>
+                    <th style="font-weight: bold; padding: 10px;">Sipariş Durumu</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Id
+                        </td>
+                        <td>
+                            @item.User.Email
+                        </td>
+                        <td>
+                            @item.CreatedDate.ToString("yyyy-MM-dd")
+                        </td>
+                        <td>
+                            <form method="post" asp-controller="Order" asp-action="UpdateStatus" style="display: flex; align-items: center;">
+                                <input type="hidden" value="@item.Id" name="Id" />
+                                <select name="Status" class="form-control" style="margin-right: 10px;">
+                                    <option value="0" selected="@(item.Status == OrderStatus.Preparing)">Hazırlanıyor</option>
+                                    <option value="1" selected="@(item.Status == OrderStatus.Shipped)">Kargoya Verildi</option>
+                                    <option value="2" selected="@(item.Status == OrderStatus.Delivered)">Teslim Edildi</option>
+                                    <option value="3" selected="@(item.Status == OrderStatus.Canceled)">İptal Edildi</option>
+                                    <option value="4" selected="@(item.Status == OrderStatus.Returned)">İade Edildi</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary">Güncelle</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

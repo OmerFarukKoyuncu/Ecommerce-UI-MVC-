@@ -1,0 +1,50 @@
+﻿@model SellerViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Seller Details</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">ID</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Id)</dd>
+
+                <dt class="col-sm-4">Name</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+
+                <dt class="col-sm-4">Contact Info</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.ContactInfo)</dd>
+
+                <dt class="col-sm-4">Approved</dt>
+                <dd class="col-sm-8">
+                    @if (Model.IsApproved)
+                    {
+                        <a class="btn btn-success btn-sm" asp-area="Admin" asp-controller="Seller" asp-action="Aproved" asp-route-id="@Model.Id">Yes</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-danger btn-sm" asp-area="Admin" asp-controller="Seller" asp-action="Aproved" asp-route-id="@Model.Id">No</a>
+                    }
+                </dd>
+
+                <dt class="col-sm-4">Profile Picture</dt>
+                <dd class="col-sm-8">
+                    <img src="@Model.ProfilePictureUrl" alt="Profile Picture" class="img-thumbnail" style="max-width: 150px;">
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary btn-sm">Back to List</a>
+        </div>
+    </div>
+</div>
+

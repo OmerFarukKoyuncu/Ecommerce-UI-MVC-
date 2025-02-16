@@ -1,0 +1,76 @@
+﻿@using ANK19_ETicaretMVC.ViewModels.CommentViewModels
+@model IEnumerable<CommentManagerViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_SellerLayout.cshtml";
+}
+
+@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    else if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+}
+
+<h1>Yorum Listesi</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="font-weight: bold; padding: 10px;">Yorum Numarası</th>
+                    <th style="font-weight: bold; padding: 10px;">Yorum İçeriği</th>
+                    <th style="font-weight: bold; padding: 10px;">Ürün Numarası</th>
+                    <th style="font-weight: bold; padding: 10px;">Kullanıcı</th>
+                    <th style="font-weight: bold; padding: 10px;">Oluşturma Tarihi</th>
+                    <th style="font-weight: bold; padding: 10px;">Yanıt</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Id
+                        </td>
+                        <td>
+                            @item.Content
+                        </td>
+                        <td>
+                            @item.ProductId
+                        </td>
+                        <td>
+                            @item.User.Email
+                        </td>
+                        <td>
+                            @item.CreatedDate.ToString("yyyy-MM-dd")
+                        </td>
+                        <td>
+                            <form method="post" asp-controller="Comment" asp-action="ReplyToComment" style="width: 100%;">
+                                <input type="hidden" value="@item.Id" name="CommentId" />
+
+                                <!-- Textarea for reply -->
+                                <div class="d-flex align-items-center mb-2" style="gap: 10px;">
+                                    <textarea id="replyText" name="replyText" rows="2" class="form-control" placeholder="Yanıtınızı bu alana yazınız..." style="flex: 1;">@item.SellerReply</textarea>
+
+                                    <!-- Buttons -->
+                                    <button type="submit" class="btn btn-primary">Yanıtla</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

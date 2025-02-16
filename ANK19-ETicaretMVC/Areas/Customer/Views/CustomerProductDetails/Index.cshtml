@@ -1,0 +1,157 @@
+﻿@model ANK19_ETicaretMVC.ViewModels.ProductViewModels.ProductDetailsViewModel
+
+@{
+    ViewData["Title"] = "Product Details";
+    Layout = "~/Views/Shared/_LayoutCustomerForContent.cshtml";
+}
+
+@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    else if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">Ürün Detayı</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Ürün Bilgileri</h4>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Id)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Id)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Name)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Description)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Description)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Price)</dt>
+                        <dd class="col-sm-8">@String.Format("{0:N2} TL", Model.Price)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Stock)</dt>
+                        <dd class="col-sm-8">@String.Format("{0} Adet", Model.Stock)</dd>
+
+                        <dt class="col-sm-4">Fotoğraf</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+                            {
+                                <img src="@Model.PhotoUrl" alt="@Model.Name" class="img-fluid" style="max-width: 200px;" />
+                            }
+                            else
+                            {
+                                <span>Ürün fotoğrafı bulunmamaktadır.</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Satıcı Bilgileri</h4>
+                    <hr />
+                    @if (Model.Seller != null)
+                    {
+                        <div>
+                            <strong>Name:</strong> @Model.Seller.CompanyName <br />
+                            <strong>Contact Info:</strong> @Model.Seller.ContactInfo <br />
+                            <strong>Is Approved:</strong> @(Model.Seller.IsApproved ? "Yes" : "No") <br />
+                            <strong>Profile Picture:</strong>
+                            @if (!string.IsNullOrEmpty(Model.Seller.ProfilePictureUrl))
+                            {
+                                <img src="@Model.Seller.ProfilePictureUrl" alt="@Model.Seller.Name" class="img-fluid" style="max-width: 100px;" />
+                            }
+                            else
+                            {
+                                <span>Profil fotoğrafı bulunmamaktadır.</span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <span>Satıcı bilgisi bulunmamaktadır.</span>
+                    }
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4 class="card-title">Kategoriler</h4>
+                    <hr />
+                    @if (Model.Categories != null && Model.Categories.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var category in Model.Categories)
+                            {
+                                <li class="list-group-item">
+                                    <strong>@category.Category.Name</strong> - @category.Category.Description
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>Kategori bilgisi bulunmamaktadır.</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Yorumlar</h4>
+            <hr />
+            @if (Model.Comments != null && Model.Comments.Any())
+            {
+                <ul class="list-group">
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@comment.User.UserName:</strong>
+                                    <span class="badge bg-primary">@comment.ProductRate / 5</span>
+                                </div>
+                                <small class="text-muted">@comment.CreatedDate.ToString("dd/MM/yyyy HH:mm")</small>
+                            </div>
+                            <p class="mt-2 mb-1">@comment.Content</p>
+                            @if (!string.IsNullOrEmpty(comment.SellerReply))
+                            {
+                                <div class="mt-2 p-2 bg-light border rounded">
+                                    <strong>Satıcı Yanıtı:</strong>
+                                    <p class="mb-0">@comment.SellerReply</p>
+                                </div>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted">Henüz yorum bulunmamaktadır.</p>
+            }
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-area="Customer" asp-controller="ProductList" asp-action="Index" class="btn btn-primary">Ürünlere Git</a>
+    </div>
+</div>

@@ -1,0 +1,146 @@
+﻿@using ANK19_ETicaretMVC.ViewModels.CommentViewModels
+@using ANK19_ETicaretMVC.ViewModels.ContentViewModels
+@using ANK19_ETicaretMVC.ViewModels.HomeViewModel
+@using System.Globalization
+@model HomeViewModel
+
+@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    else if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+}
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_LayoutCustomerIndex.cshtml";
+
+    double GetAverageRating(List<CommentManagerViewModel> comments)
+    {
+        if (comments == null || !comments.Any())
+        {
+            return 0;
+        }
+        return comments.Average(c => c.ProductRate);
+    }
+}
+
+<svg style="display: none;">
+    <symbol id="star-full" viewBox="0 0 16 16">
+        <path d="M3.612 15.443c-.396.198-.824-.149-.746-.592l.83-4.73-3.523-3.356c-.33-.314-.158-.888.283-.95l4.898-.696 2.18-4.327c.197-.392.73-.392.927 0l2.18 4.327 4.898.696c.441.062.613.636.283.95l-3.523 3.356.83 4.73c.078.443-.35.79-.746.592L8 13.187l-4.389 2.256z" />
+    </symbol>
+    <symbol id="star-half" viewBox="0 0 16 16">
+        <path d="M5.354 5.119L8 1.5l2.646 3.619 4.898.696-3.523 3.356.83 4.73L8 13.187l-4.389 2.256.83-4.73L.918 5.815l4.898-.696zM8 12.027l3.247 1.67-.62-3.533 2.588-2.465-3.58-.51L8 3.223v8.804z" />
+    </symbol>
+</svg>
+
+
+
+<div>
+    @Html.Raw(Model.Content.ContentText)
+</div>
+
+
+<section class="pb-5">
+    <div class="container-lg">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section-header d-flex flex-wrap justify-content-between my-4">
+                    <h2 class="section-title">Ürünler</h2>
+                    <div class="d-flex align-items-center">
+                        <a asp-area="Customer" asp-controller="ProductList" asp-action="Index" class="btn btn-primary rounded-1">Tüm Ürünler</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4">
+                    @foreach (var item in Model.Products)
+                    {
+                        var averageRating = GetAverageRating(item.Comments);
+                        var commentCount = item.Comments?.Count ?? 0;
+                        <div class="col mb-4">
+                            <div class="card h-100 shadow-sm">
+                                <img src="@item.PhotoUrl" class="card-img-top img-fluid" alt="@item.Name" style="height: 200px; object-fit: cover;">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">@item.Name</h5>
+                                    <div class="mb-2">
+                                        <div>
+                                            <span class="rating">
+                                                @for (int i = 1; i <= 5; i++)
+                                                {
+                                                    if (i <= averageRating)
+                                                    {
+                                                        <svg width="18" height="18" class="text-warning"><use xlink:href="#star-full"></use></svg>
+                                                    }
+                                                    else if (i == averageRating + 0.5)
+                                                    {
+                                                        <svg width="18" height="18" class="text-warning"><use xlink:href="#star-half"></use></svg>
+                                                    }
+                                                    else
+                                                    {
+                                                        <svg width="18" height="18" class="text-muted"><use xlink:href="#star-full"></use></svg>
+                                                    }
+                                                }
+                                            </span>
+
+                                            @if (commentCount > 0)
+                                            {
+                                                <span>(@commentCount)</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        @if (item.Promotions.Any())
+                                        {
+                                            var discount = item.Promotions.FirstOrDefault()?.DiscountValue ?? 0;
+                                            var discountedPrice = item.Price * (1 - discount / 100);
+                                            <del>@string.Format(new CultureInfo("tr-TR"), "{0:#,##0.##}", item.Price) ₺</del>
+                                            <span class="text-dark fw-semibold">@string.Format(new CultureInfo("tr-TR"), "{0:#,##0.##}", discountedPrice) ₺</span>
+                                            <span class="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">@string.Format(new CultureInfo("tr-TR"), "{0:#,##0.##}", discount) % OFF</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-dark fw-semibold">@string.Format(new CultureInfo("tr-TR"), "{0:#,##0.##}", item.Price) ₺</span>
+                                        }
+                                    </div>
+                                    <div class="mt-auto">
+                                        <form asp-area="Customer" asp-controller="ShopCart" asp-action="AddItemToCart">
+                                            <input type="hidden" name="Id" asp-for="@item.Id" />
+                                            @{
+                                                var err = System.Net.WebUtility.UrlEncode("Ürünü sepete eklemek için lütfen giriş yapınız.");
+                                            }
+                                            <input type="hidden" name="ErrorFallBack" value="/?error=@err" />
+                                            <div class="row g-1 mt-2">
+                                                <div class="col">
+                                                    <input type="number" name="quantity" class="form-control border-dark-subtle input-number quantity" value="1">
+                                                </div>
+                                                <div class="col-auto">
+                                                    <button class="btn btn-primary rounded-1 fs-7 btn-cart">
+                                                        <svg width="18" height="18"><use xlink:href="#cart"></use></svg>Ekle
+                                                    </button>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <a asp-area="Customer" asp-controller="CustomerProductDetails" asp-action="Index" asp-route-id="@item.Id" class="btn btn-secondary rounded-1 fs-7">Detay</a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

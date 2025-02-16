@@ -1,0 +1,168 @@
+﻿@using ANK19_ETicaretMVC.Areas.Admin.Models.UserViewModels
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+}
+
+@model List<GetAllUsersWithRolesViewModel>
+
+@if (ViewBag.Errors != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <ul>
+            @foreach (var error in ViewBag.Errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+@if (ViewBag.Success != null)
+{
+    <div class="alert alert-success" role="alert">
+        <h4>@Html.Raw(ViewBag.Success)</h4>
+    </div>
+}
+
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addModal">Kullanıcı Ekle</button>
+    <!-- Kullanıcılar Listesi -->
+    <table class="table table-striped" id="userTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Kullanıcı Adı</th>
+                <th>Ad</th>
+                <th>İkinci Ad</th>
+                <th>Soyad</th>
+                <th>İkinci Soyad</th>
+                <th>Adres</th>
+                <th>ProfilFotoğrafı</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr data-id="@user.Id">
+                    <td>@user.Id</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Firstname</td>
+                    <td>@user.SecondName</td>
+                    <td>@user.Lastname</td>
+                    <td>@user.SecondLastname</td>
+                    <td>@user.Address</td>
+                    <td>@user.ProfilePictureUrl</td>
+                    <td>@user.Email</td>
+                    <td>@string.Join(", ", user.RoleNames)</td>
+                    <td>@(user.IsActive ? "Aktif" : "Pasif")</td>
+                    <td>
+                        <form asp-area="Admin" asp-controller="User" asp-action="Edit" method="get">
+                            <input type="hidden" name="id" value="@user.Id"></input>
+                            <button class="btn btn-primary btn-edit" data-id="@user.Id" data-toggle="modal" data-target="#editModal">Güncelle</button>
+                        </form>
+                        <button class="btn btn-danger btn-delete" data-id="@user.Id" data-toggle="modal" data-target="#deleteModal">Sil</button>
+                        <form asp-area="Admin" asp-controller="User" asp-action="Role" method="get">
+                            <input type="hidden" name="userId" value="@user.Id"></input>
+                            <button class="btn btn-warning btn-assign-role" data-id="@user.Id" data-toggle="modal" data-target="#roleModal">Rol Ayarları</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Kullanıcı Ekleme Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Kullanıcı Ekle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-area="Admin" asp-controller="User" asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="addUserName">Kullanıcı Adı</label>
+                        <input type="text" class="form-control" id="addUserName" name="UserName" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="addPassword">Şifre</label>
+                        <input type="password" class="form-control" id="addPassword" name="Password" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="addEmail">Email</label>
+                        <input type="email" class="form-control" id="addEmail" name="Email" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="addFirstname">Ad</label>
+                        <input type="text" class="form-control" id="addFirstname" name="Firstname" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="addLastname">Soyad</label>
+                        <input type="text" class="form-control" id="addLastname" name="Lastname" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="addSecondName">İkinci Ad</label>
+                        <input type="text" class="form-control" id="addSecondName" name="SecondName" />
+                    </div>
+                    <div class="form-group">
+                        <label for="addSecondLastname">İkinci Soyad</label>
+                        <input type="text" class="form-control" id="addSecondLastname" name="SecondLastname" />
+                    </div>
+                    <div class="form-group">
+                        <label for="addAddress">Adres</label>
+                        <input type="text" class="form-control" id="addAddress" name="Address" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="addPhoto">Fotoğraf</label>
+                        <input type="file" class="form-control" id="addPhoto" name="Photo" />
+                    </div>
+                    <button type="submit" class="btn btn-success">Ekle</button>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Kullanıcı Silme Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Kullanıcıyı Sil</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bu kullanıcıyı silmek istediğinizden emin misiniz?</p>
+                <form id="deleteUserForm" asp-area="Admin" asp-controller="User" asp-action="Delete" method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="deleteUserId" name="Id" />
+                    <button type="submit" class="btn btn-danger">Sil</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Vazgeç</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function () {
+            const userId = this.getAttribute('data-id');
+            document.getElementById('deleteUserId').value = userId;
+        });
+    });
+</script>

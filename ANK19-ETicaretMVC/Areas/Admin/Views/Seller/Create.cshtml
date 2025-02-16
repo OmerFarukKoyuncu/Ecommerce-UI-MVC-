@@ -1,0 +1,59 @@
+﻿@model ANK19_ETicaretMVC.ViewModels.SellerViewModel.SellerViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Name Field -->
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <!-- Contact Info Field -->
+            <div class="form-group">
+                <label asp-for="ContactInfo" class="control-label">Contact Info</label>
+                <input asp-for="ContactInfo" class="form-control" placeholder="Enter Contact Info" />
+                <span asp-validation-for="ContactInfo" class="text-danger"></span>
+            </div>
+
+            <!-- Profile Picture Field with Default Image -->
+            <div class="form-group">
+                <label asp-for="ProfilePictureUrl" class="control-label">Profile Picture</label>
+                <div class="d-flex justify-content-center">
+                    <img id="profileImagePreview" src="https://via.placeholder.com/150" alt="Profile Image" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;" onclick="document.getElementById('profileImageInput').click();" />
+                    <input id="profileImageInput" type="file" class="d-none" accept="image/*" onchange="previewImage(event)" />
+                </div>
+                <span asp-validation-for="ProfilePictureUrl" class="text-danger"></span>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group text-center">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Back to List Link -->
+<div class="text-center mt-3">
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('profileImagePreview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

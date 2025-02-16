@@ -1,0 +1,54 @@
+﻿@using ANK19_ETicaretMVC.ViewModels.ProductViewModels
+@model IEnumerable<ProductViewModel>
+
+@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-center my-4">Ürünler</h1>
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <!-- Ürün Görseli -->
+                    <img src="@item.PhotoUrl" class="card-img-top img-fluid" alt="@item.Name" style="height: 200px; object-fit: cover;">
+
+                    <!-- Kart İçeriği -->
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">@item.Name</h5>
+                        <p class="card-text">
+                            <strong>Açıklama:</strong> @item.Description <br />
+                            <strong>Fiyat:</strong> @item.Price ₺ <br />
+                            <strong>Stok:</strong> @item.Stock
+                        </p>
+
+
+                        <div class="d-flex justify-content-between">
+
+                            <a href="@Url.Action("Edit", "Product", new { id = item.Id })" class="btn btn-sm btn-warning">Güncelle</a>
+
+                            <a href="@Url.Action("Details", "Product", new { id = item.Id })" class="btn btn-sm btn-info">Detay</a>
+
+                            <form action="@Url.Action("Delete", "Product")" method="post">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+                        <div class="container text-center mt-4">
+                            <a href="@Url.Action("Create", "Product")" class="btn btn-success btn-lg">
+                                <i class="fas fa-plus"></i> Ürün Ekle
+                            </a>
+                        </div>
+</div>
+

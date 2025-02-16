@@ -1,0 +1,53 @@
+﻿@model ANK19_ETicaretMVC.ViewModels.ProductViewModels.UpdateProductViewModel
+
+@{
+    ViewData["Title"] = "Edit Product";
+    Layout = "~/Views/Shared/_SellerLayout.cshtml";
+}
+
+<h1>Ürünü Güncelle</h1>
+
+<div>
+    <h4>Güncellenecek Ürün Bilgileri</h4>
+    <hr />
+    <form method="post" action="@Url.Action("Edit", "Product")" enctype="multipart/form-data">
+        <input type="hidden" value="@TempData["Id"]" name="Id" />
+
+        <!-- Product Name -->
+        <div class="form-group">
+            <label asp-for="Name" class="control-label">Ürün İsmi</label>
+            <input name="Name" class="form-control" value=" @Html.DisplayFor(model => model.Name)" />
+        </div>
+
+        <!-- Product Description -->
+        <div class="form-group">
+            <label asp-for="Description" class="control-label">Ürün Açıklaması</label>
+            <textarea name="Description" class="form-control"> @Html.DisplayFor(model => model.Description)</textarea>
+        </div>
+
+        <!-- Product Price -->
+        <div class="form-group">
+            <label asp-for="Price" class="control-label">Ürün Fiyatı</label>
+            <input name="Price" type="number" class="form-control" value="@Html.DisplayFor(model => model.Price)" />
+        </div>
+
+        <!-- Product Stock -->
+        <div class="form-group">
+            <label asp-for="Stock" class="control-label">Ürün Stok Miktarı</label>
+            <input name="Stock" type="number" class="form-control" value="@Html.DisplayFor(model => model.Stock)" />
+        </div>
+
+        <div class="form-group">
+            <label for="Photo">Ürün Fotoğrafı</label>
+            <input name="Photo" class="form-control" type="file" />
+            <span asp-validation-for="Photo" class="text-danger"></span>
+        </div>
+
+
+        <!-- Submit Button -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Güncelle</button>
+            <a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
+        </div>
+    </form>
+</div>

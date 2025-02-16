@@ -1,0 +1,12 @@
+﻿@using ANK19_ETicaretMVC.ViewModels.ContentViewModels
+@model ContentViewModel
+
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_LayoutCustomerForContent.cshtml";
+}
+
+<div>
+    @Html.Raw(Model.ContentText)
+</div>

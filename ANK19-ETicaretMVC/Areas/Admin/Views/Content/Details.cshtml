@@ -1,0 +1,46 @@
+﻿@using ANK19_ETicaretMVC.ViewModels.ContentViewModels
+@model ContentViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="https://cdn.tiny.cloud/1/k7784pjnj2jansjzlg4lgwnha903cnnbcjrjjjkr5ezxuxyq/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+
+    //tinymce dokümanlarından alınma
+    tinymce.init({
+      selector: '#mytextarea',
+
+        plugins: [
+            'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+            'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
+            'media', 'table', 'emoticons', 'help'
+        ],
+        menu: {
+            file: { title: 'File', items: 'newdocument restoredraft | preview | importword exportpdf exportword | print | deleteallconversations' },
+            edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
+            view: { title: 'View', items: 'code revisionhistory | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
+            insert: { title: 'Insert', items: 'image link media addcomment pageembed codesample inserttable | math | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime' },
+            format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat' },
+            tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | a11ycheck code wordcount' },
+            table: { title: 'Table', items: 'inserttable | cell row column | advtablesort | tableprops deletetable' },
+            help: { title: 'Help', items: 'help' }
+        }
+
+    });
+</script>
+
+<form asp-controller="Content" asp-action="Update" method="post">
+    <h1>@Model.PageName</h1>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="PageName" />
+    <div class="form-group">
+        <label asp-for="ContentText" class="control-label"></label>
+        <textarea id="mytextarea" asp-for="ContentText" class="form-control">@Model.ContentText</textarea>
+        <span asp-validation-for="ContentText" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+
+</form>

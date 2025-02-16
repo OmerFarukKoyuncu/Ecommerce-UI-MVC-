@@ -1,0 +1,64 @@
+﻿@model SellerProfileViewModel
+@{
+    Layout = "~/Views/Shared/_SellerLayout.cshtml";
+}
+@{
+    ViewData["Title"] = "Seller Profilini Güncelle";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">Satıcı Profilini Güncelle</h2>
+
+        <form asp-action="UpdateProfile" method="post" enctype="multipart/form-data">
+
+            <div class="text-center mb-4">
+                <img src="@(!string.IsNullOrEmpty(Model.ProfilePictureUrl) ? Model.ProfilePictureUrl : "/images/default-logo.png")"
+                     class="rounded-circle img-thumbnail" alt="Profil Fotoğrafı" width="150" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="fw-bold">Satıcı Adı</label>
+                <input asp-for="Name" class="form-control" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CompanyName" class="fw-bold">Firma Adı</label>
+                <input asp-for="CompanyName" class="form-control" required />
+                <span asp-validation-for="CompanyName" class="text-danger"></span>
+            </div>
+
+            
+
+            <div class="mb-3">
+                <label asp-for="Email" class="fw-bold">E-posta</label>
+                <input asp-for="Email" class="form-control" type="email" required />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ContactInfo" class="fw-bold">Adres</label>
+                <textarea asp-for="ContactInfo" class="form-control" rows="3" required></textarea>
+                <span asp-validation-for="ContactInfo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ProfilePicture" class="fw-bold">Profil Fotoğrafı</label>
+                <input asp-for="ProfilePicture" type="file" class="form-control" />
+                <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+            </div>
+
+          
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success px-5">Güncelle</button>
+                <a asp-action="Profile" class="btn btn-secondary">İptal</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

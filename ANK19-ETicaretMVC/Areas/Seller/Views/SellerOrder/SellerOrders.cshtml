@@ -1,0 +1,95 @@
+﻿
+@using ANK19_ETicaretMVC.Areas.Admin.Enums
+@using ANK19_ETicaretMVC.Areas.Seller.Models.OrderViewModels
+@using ANK19_ETicaretMVC.ViewModels.OrderViewModels
+
+@{
+    Layout = "~/Views/Shared/_SellerLayout.cshtml";
+}
+
+@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    else if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+}
+
+@model List<OrderSellerViewModel>
+
+<h1>Sipariş Listem</h1>
+
+<hr />
+<div class="row mb-3">
+    <div class="col-md-12">
+        <form method="get" asp-action="GetSellerOrderById" asp-controller="SellerOrder" style="display: flex; align-items: center;">
+            <input type="text" name="orderId" class="form-control" placeholder="Sipariş numarasını giriniz..." style="max-width: 300px; margin-right: 10px;" value="@ViewData["SearchId"]" />
+            <button type="submit" class="btn btn-primary">Ara</button>
+        </form>
+    </div>
+</div>
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Sipariş Numarası</th>
+                    <th>Sipariş Sahibi</th>
+                    <th>Ürün Adı</th>
+                    <th>Ürün Açıklaması</th>
+                    <th>Miktar</th>
+                    <th>Sipariş Tarihi</th>
+                    <th>Sipariş Durumu</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    foreach (var product in order.OrderProducts)
+                {
+                    <tr>
+                            <td>@order.Id</td>
+                            <td>@order.User.Email</td>
+                            <td>@product.Product.Name</td>
+                            <td>@product.Product.Description</td>
+                            <td>@product.Quantity</td>
+                            <td>@order.CreatedDate.ToString("yyyy-MM-dd")</td>
+                        <td>
+                                <form method="post" asp-controller="SellerOrder" asp-action="UpdateStatus" style="display: flex; align-items: center;">
+                                    <input type="hidden" value="@order.Id" name="Id" />
+                                <select name="Status" class="form-control" style="margin-right: 10px;">
+                                        <option value="0" selected="@(order.Status == OrderStatus.Preparing)">Hazırlanıyor</option>
+                                        <option value="1" selected="@(order.Status == OrderStatus.Shipped)">Kargoya Verildi</option>
+                                        <option value="2" selected="@(order.Status == OrderStatus.Delivered)">Teslim Edildi</option>
+                                        <option value="3" selected="@(order.Status == OrderStatus.Canceled)">İptal Edildi</option>
+                                        <option value="4" selected="@(order.Status == OrderStatus.Returned)">İade Edildi</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary">Güncelle</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                }
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+<div class="text-center mt-4">
+    <form asp-action="RefundsChanges" method="get">
+        <button type="submit" class="btn btn-danger">
+            İade ve Değişim Taleplerini Görüntüle
+        </button>
+    </form>
+</div>
+

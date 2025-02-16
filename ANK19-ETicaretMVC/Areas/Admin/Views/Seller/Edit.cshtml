@@ -1,0 +1,80 @@
+﻿@model ANK19_ETicaretMVC.ViewModels.SellerViewModel.SellerViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header text-center">
+            <h4>Edit Seller</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Seller ID -->
+                <div class="form-group mb-3">
+                    <label asp-for="Id" class="form-label">Id</label>
+                    <input asp-for="Id" class="form-control" readonly />
+                    <span asp-validation-for="Id" class="text-danger"></span>
+                </div>
+
+                <!-- Name -->
+                <div class="form-group mb-3">
+                    <label asp-for="Name" class="form-label">Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter Seller Name" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="form-group mb-3">
+                    <label asp-for="ContactInfo" class="form-label">Contact Info</label>
+                    <input asp-for="ContactInfo" class="form-control" placeholder="Enter Contact Info" />
+                    <span asp-validation-for="ContactInfo" class="text-danger"></span>
+                </div>
+
+                <!-- Is Approved Checkbox -->
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" asp-for="IsApproved" id="IsApproved" />
+                    <label class="form-check-label" for="IsApproved">@Html.DisplayNameFor(model => model.IsApproved)</label>
+                </div>
+
+                <!-- Profile Picture Upload -->
+                <div class="form-group mb-3">
+                    <label asp-for="ProfilePictureUrl" class="form-label">Profile Picture</label>
+                    <div class="d-flex justify-content-center">
+                        <img id="ProfilePicturePreview" src="https://via.placeholder.com/150" alt="Profile Picture Preview" class="img-thumbnail mt-3" style="max-height: 200px; object-fit: cover; cursor: pointer;" onclick="document.getElementById('ProfilePictureInput').click();" />
+                        <input id="ProfilePictureInput" type="file" class="d-none" accept="image/*" onchange="previewImage(event)" />
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group text-center">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-center">
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('ProfilePicturePreview');
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+</script>

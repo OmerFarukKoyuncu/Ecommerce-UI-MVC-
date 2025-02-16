@@ -1,0 +1,87 @@
+﻿@using ANK19_ETicaretMVC.ViewModels.ShopCartViewModels
+@model ShopCartViewModel
+
+@{
+	Layout = "~/Views/Shared/_LayoutCustomerForContent.cshtml";
+	ViewData["Title"] = "Sepetim";
+}
+
+@{
+	if (TempData["ErrorMessage"] != null)
+	{
+		<div class="alert alert-danger">
+			@TempData["ErrorMessage"]
+		</div>
+	}
+	else if (TempData["SuccessMessage"] != null)
+	{
+		<div class="alert alert-success">
+			@TempData["SuccessMessage"]
+		</div>
+	}
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (Model.Items != null && Model.Items.Any())
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Ürün</th>
+				<th>Adet</th>
+				<th>Birim Fiyat</th>
+				<th>Tutar</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Items)
+			{
+				<tr>
+					<td>@item.Product.Name</td>
+					<td>
+						<form asp-action="DecrementItem" asp-controller="ShopCart" method="post" class="d-inline">
+							<input type="hidden" name="Id" value="@item.Id" />
+							<button type="submit" class="btn btn-outline-secondary btn-sm">-</button>
+						</form>
+						<span>@item.Quantity</span>
+						<form asp-action="IncrementItem" asp-controller="ShopCart" method="post" class="d-inline">
+							<input type="hidden" name="Id" value="@item.Id" />
+							<button type="submit" class="btn btn-outline-secondary btn-sm">+</button>
+						</form>
+					</td>
+					<td>@item.Product.Price?.ToString("C", new System.Globalization.CultureInfo("tr-TR"))</td>
+					<td>@item.TotalPrice.ToString("C", new System.Globalization.CultureInfo("tr-TR"))</td>
+					<td>
+						<form asp-action="RemoveItemFromCart" asp-controller="ShopCart" method="post">
+							<input type="hidden" name="Id" value="@item.Id" />
+							<button type="submit" class="btn btn-danger">Kaldır</button>
+						</form>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+	<h3>Total: @Model.Items.Select(x => x.TotalPrice).Sum().ToString("C", new System.Globalization.CultureInfo("tr-TR"))</h3>
+	<div class="d-flex gap-2">
+
+
+		<form asp-action="EmptyCart" asp-controller="ShopCart" method="post" class="d-inline">
+			<button type="submit" class="btn btn-danger">Sepeti Boşalt</button>
+		</form>
+		<a asp-action="Index" asp-controller="Home" asp-area="" class="btn btn-primary">Alışverişe Devam Et</a>
+		<form asp-action="Checkout" method="get" class="d-inline">
+			<input type="hidden" name="totalPrice" value="@Model.Items.Sum(x => x.TotalPrice).ToString(System.Globalization.CultureInfo.InvariantCulture)" />		
+			<button type="submit" class="btn btn-success">Ödeme Yap</button>
+		</form>
+	</div>
+
+}
+
+else
+{
+	<p>Sepette hiç ürün bulunmamaktadır.</p>
+	<a asp-action="Index" asp-controller="Home" asp-area="" class="btn btn-primary">Alışverişe Başla</a>
+}

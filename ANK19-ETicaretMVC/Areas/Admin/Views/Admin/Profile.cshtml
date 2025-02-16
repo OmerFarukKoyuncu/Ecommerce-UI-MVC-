@@ -1,0 +1,52 @@
+﻿@using ANK19_ETicaretMVC.Areas.Admin.Models.AdminViewModels
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@model AdminProfileViewModel
+
+<div class="container mt-5">
+    <h2>Admin Profil Bilgileri</h2>
+    <form asp-action="UpdateProfile" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="FirstName">İsim</label>
+            <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" required />
+        </div>
+        <div class="form-group">
+            <label for="MiddleName">İkinci İsim</label>
+            <input type="text" class="form-control" id="MiddleName" name="MiddleName" value="@Model.SecondName" />
+        </div>
+        <div class="form-group">
+            <label for="LastName">Soyisim</label>
+            <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName" required />
+        </div>
+        <div class="form-group">
+            <label for="SecondLastName">İkinci Soyisim</label>
+            <input type="text" class="form-control" id="SecondLastName" name="SecondLastName" value="@Model.SecondLastname" />
+        </div>
+        <div class="form-group">
+            <label for="Photo">Fotoğraf</label>
+            <input type="file" class="form-control-file" id="Photo" name="Photo" />
+
+            @{
+                var profilePictureUrl = !string.IsNullOrEmpty(Model?.ProfilePictureUrl) ? Model.ProfilePictureUrl : "/images/defaultpp.jpg";
+            }
+
+            <img src="@profilePictureUrl" alt="Profil Fotoğrafı" class="img-thumbnail mt-2" width="150" />
+
+        </div>
+        <div class="form-group">
+            <label for="Email">Email</label>
+            <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
+        </div>
+        <div class="form-group">
+            <label for="Username">Kullanıcı Adı</label>
+            <input type="text" class="form-control" id="Username" name="Username" value="@Model.UserName" required />
+        </div>
+        <div class="form-group">
+            <label for="Address">Adres</label>
+            <textarea class="form-control" id="Address" name="Address" rows="3" required>@Model.Address</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+    </form>
+</div>

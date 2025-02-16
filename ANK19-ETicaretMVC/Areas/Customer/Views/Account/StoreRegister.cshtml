@@ -1,0 +1,74 @@
+﻿@model ANK19_ETicaretMVC.ViewModels.CustomerSellerRegisterViewModels.SellerRegisterViewModel
+
+@{
+    ViewData["Title"] = "StoreRegister";
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm p-4">
+                <h2 class="text-center mb-4">Mağaza Açma Bilgileri</h2>
+
+                <form asp-action="StoreRegister" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="text-center">
+                        <img id="profilePreview" src="https://via.placeholder.com/150" class="rounded-circle mb-3" width="150" height="150" style="cursor:pointer;" onclick="document.getElementById('profileInput').click();">
+                        <input type="file" id="profileInput" class="d-none" name="Photo" onchange="previewImage(event, 'profilePreview')">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control" required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input type="email" asp-for="Email" class="form-control" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="CompanyName" class="form-label"></label>
+                        <input asp-for="CompanyName" class="form-control" required />
+                        <span asp-validation-for="CompanyName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="ContactInfo" class="form-label"></label>
+                        <input asp-for="ContactInfo" class="form-control" required />
+                        <span asp-validation-for="ContactInfo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="ContactName" class="form-label"></label>
+                        <input asp-for="ContactName" class="form-control" required />
+                        <span asp-validation-for="ContactName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="CompanyAdress" class="form-label"></label>
+                        <input asp-for="CompanyAdress" class="form-control" required />
+                        <span asp-validation-for="CompanyAdress" class="text-danger"></span>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" value="Create" class="btn btn-primary w-100" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(event, previewId) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            const output = document.getElementById(previewId);
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync ("_ValidationScriptsPartial");
+    }
+}

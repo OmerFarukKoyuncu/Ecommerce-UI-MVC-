@@ -1,0 +1,94 @@
+﻿@using ANK19_ETicaretMVC.ViewModels.ProductViewModels
+@model AddProductViewModel
+@{
+	Layout = "~/Views/Shared/_SellerLayout.cshtml";
+}
+@{
+	ViewData["Title"] = "Ürün Ekle";
+}
+
+<div class="container mt-5">
+	<h2 class="text-center mb-4">Ürün Ekle</h2>
+	<div class="card shadow-lg p-4">
+		<form asp-action="Create" method="post" enctype="multipart/form-data">
+			<div class="row">
+				<!-- Ürün Adı -->
+				<div class="col-md-6 mb-3">
+					<label asp-for="Name" class="form-label">Ürün Adı</label>
+					<input asp-for="Name" class="form-control" placeholder="Ürün adını girin" required />
+					<span asp-validation-for="Name" class="text-danger"></span>
+				</div>
+
+				<!-- Açıklama -->
+				<div class="col-md-6 mb-3">
+					<label asp-for="Description" class="form-label">Açıklama</label>
+					<input asp-for="Description" class="form-control" placeholder="Ürün açıklamasını girin" required />
+					<span asp-validation-for="Description" class="text-danger"></span>
+				</div>
+			</div>
+
+			<div class="row">
+				<!-- Fiyat -->
+				<div class="col-md-6 mb-3">
+					<label asp-for="Price" class="form-label">Fiyat</label>
+					<input asp-for="Price" type="number" class="form-control"  placeholder="Ürün fiyatını girin" required />
+					<span asp-validation-for="Price" class="text-danger"></span>
+				</div>
+
+				<!-- Stok Miktarı -->
+				<div class="col-md-6 mb-3">
+					<label asp-for="Stock" class="form-label">Stok Miktarı</label>
+					<input asp-for="Stock" type="number" class="form-control" placeholder="Stok miktarını girin" required />
+					<span asp-validation-for="Stock" class="text-danger"></span>
+				</div>
+			</div>
+
+			<div class="d-none">
+				<!-- Satıcı ID (Giriş yapan kullanıcıdan alınacak ve değiştirilemez olacak) -->
+				<div class="col-md-6 mb-3">
+					<label asp-for="SellerId" class="form-label">Satıcı ID </label>
+					<input type="hidden" asp-for="SellerId" id="SellerId" />
+
+				</div>
+			</div>
+
+				<!-- Kategori Seçimi -->
+				<div class="col-md-6 mb-3">
+					@foreach (var category in (List<CategoryViewModel>)ViewData["Categories"])
+					{
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input"
+								   name="CategoryIds" value="@category.Id"
+							@(Model?.CategoryIds != null && Model.CategoryIds.Contains(category.Id) ? "checked" : "") />
+							<label class="form-check-label">@category.Name</label>
+						</div>
+					}
+
+				</div>
+			
+
+			<!-- Ürün Fotoğrafı -->
+			<div class="mb-3">
+				<label asp-for="Photo" class="form-label">Ürün Fotoğrafı</label>
+				<input asp-for="Photo" type="file" class="form-control" />
+				<span asp-validation-for="Photo" class="text-danger"></span>
+			</div>
+
+			<!-- Form Gönderme Butonu -->
+			<div class="text-center">
+				<button type="submit" class="btn btn-primary btn-lg">Ürünü Ekle</button>
+				<a asp-action="Index" class="btn btn-secondary btn-lg ms-3">Vazgeç</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		// Kullanıcı token'dan seller ID'yi alıp inputa yaz
+		document.addEventListener('DOMContentLoaded', function () {
+			var sellerId = '@User.FindFirst("sub")?.Value';
+			document.getElementById("SellerId").value = sellerId;
+		});
+	</script>
+}

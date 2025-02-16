@@ -1,0 +1,49 @@
+﻿@model SellerProfileViewModel
+@{
+    Layout = "~/Views/Shared/_SellerLayout.cshtml";
+}
+@{
+    ViewData["Title"] = "Satıcı Profilini Görüntüle";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">Satıcı Profili</h2>
+
+        <div class="text-center mb-4">
+            <img src="@(!string.IsNullOrEmpty(Model.ProfilePictureUrl) ? Model.ProfilePictureUrl : "/images/default-logo.png")"
+                 class="rounded-circle img-thumbnail" alt="Profil Fotoğrafı" width="150" />
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold">Firma Adı:</label>
+                <p class="form-control">@Model.CompanyName</p>
+            </div>
+           
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold">Satıcı Adı:</label>
+                <p class="form-control">@Model.Name</p>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold">E-posta:</label>
+                <p class="form-control">@Model.Email</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="fw-bold">Adres:</label>
+                <p class="form-control">@Model.ContactInfo</p>
+            </div>
+        </div>
+
+       
+
+        <div class="text-center">
+            <a asp-action="UpdateProfile" class="btn btn-primary">Profili Güncelle</a>
+        </div>
+    </div>
+</div>

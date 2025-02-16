@@ -1,0 +1,34 @@
+﻿@using ANK19_ETicaretMVC.Areas.Admin.Models.UserViewModels
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+@model UpdateUserViewModel
+@{
+    var userId = TempData["id"];
+}
+
+<form asp-area="Admin" asp-controller="User" asp-action="Role" method="post">
+    <div>
+        <label>Kullanıcı Adı:</label>
+        <span>@Model.UserName</span>
+    </div>
+    <div>
+        <label>Adı:</label>
+        <span>@Model.Firstname</span>
+    </div>
+    <div>
+        <label>Soyadı:</label>
+        <span>@Model.Lastname</span>
+    </div>
+    <div>
+        <input type="checkbox" name="admin" value=true /> Admin
+    </div>
+    <div>
+        <input type="checkbox" name="user" value=true /> User
+    </div>
+    <div>
+        <input type="checkbox" name="seller" value=true /> Seller
+    </div>
+    <input type="hidden" name="userId" value="@userId"></input>
+    <button type="submit">Güncelle</button>
+</form>

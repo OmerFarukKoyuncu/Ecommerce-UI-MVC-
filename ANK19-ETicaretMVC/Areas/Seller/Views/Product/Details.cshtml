@@ -1,0 +1,146 @@
+﻿@model ANK19_ETicaretMVC.ViewModels.ProductViewModels.ProductDetailsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_SellerLayout.cshtml";
+}
+
+@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    else if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Product Details</h4>
+    <hr />
+    <dl class="row">
+        <!-- Temel Bilgiler -->
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Id)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Id)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Name)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Description)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Price)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Price)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Stock)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Stock)</dd>
+
+        <dt class="col-sm-2">Fotoğraf</dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+            {
+                <img src="@Model.PhotoUrl" alt="@Model.Name" style="max-width: 200px;" />
+            }
+            else
+            {
+                <span>Fotoğraf Bulunamadı</span>
+            }
+        </dd>
+
+        <!-- Seller Bilgileri -->
+        <dt class="col-sm-2">Satıcı</dt>
+        <dd class="col-sm-10">
+            @if (Model.Seller != null)
+            {
+                <div>
+                    <strong>Satıcı İsmi:</strong> @Model.Seller.CompanyName <br />
+                    @* <strong>Contact Info:</strong> @Model.Seller.ContactInfo <br />
+                    <strong>Is Approved:</strong> @(Model.Seller.IsApproved ? "Yes" : "No") <br />
+                    <strong>Profile Picture:</strong>
+                    @if (!string.IsNullOrEmpty(Model.Seller.ProfilePictureUrl))
+                    {
+                        <img src="@Model.Seller.ProfilePictureUrl" alt="@Model.Seller.Name" style="max-width: 100px;" />
+                    }
+                    else
+                    {
+                        <span>No Profile Picture</span>
+                    } *@
+                </div>
+            }
+            else
+            {
+                <span>Satıcı Bilgisi Bulunamadı</span>
+            }
+        </dd>
+
+        <!-- Kategoriler -->
+        <dt class="col-sm-2">Kategoriler</dt>
+        <dd class="col-sm-10">
+            @if (Model.Categories != null && Model.Categories.Any())
+            {
+                <ul>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <li>
+                            <strong>@category.Category.Name</strong> - @category.Category.Description
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <span>Kategori Seçimi Yapılmamış.</span>
+            }
+        </dd>
+    </dl>
+
+    <!-- Yorumlar Bölümü -->
+    <h4 class="mt-4">Yorumlar</h4>
+    <hr />
+    @if (Model.Comments != null && Model.Comments.Any())
+    {
+        <ul class="list-group">
+            @foreach (var comment in Model.Comments)
+            {
+                <li class="list-group-item">
+                    <strong>@comment.User.Email:</strong> @comment.Content
+                    <br />
+                    <small class="text-muted">@comment.CreatedDate.ToString("dd/MM/yyyy HH:mm")</small>
+                    <div class="mt-2">
+                        <form method="post" asp-controller="Comment" asp-action="ReplyToComment" style="width: 100%;">
+                            <input type="hidden" value="@comment.Id" name="CommentId" />
+                            <input type="hidden" value="/Seller/Product/Details/@comment.ProductId" name="ReturnUrl" />
+
+                            <!-- Textarea for reply -->
+                            <div class="d-flex align-items-center mb-2" style="gap: 10px;">
+                                <textarea id="replyText" name="replyText" rows="2" class="form-control" placeholder="Yanıtınızı bu alana yazınız..." style="flex: 1;">@comment.SellerReply</textarea>
+
+                                <!-- Buttons -->
+                                <button type="submit" class="btn btn-primary">Yanıtla</button>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="text-muted">Henüz yorum bulunmamaktadır.</p>
+    }
+
+   
+</div>
+
+<div class="mt-4">
+    @Html.ActionLink("Güncelle", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" }) |
+    <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+</div>
+

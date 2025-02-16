@@ -1,0 +1,61 @@
+﻿@using ANK19_ETicaretMVC.Areas.Customer.Models.CustomerProfileViewModels
+@model CustomerViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutCustomer.cshtml";
+}
+@{
+    ViewData["Title"] = "Update the customer profile";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">Kullanıcı Profili Güncelle</h2>
+
+        <form asp-action="UpdateProfile" method="post" enctype="multipart/form-data">
+
+            <div class="text-center mb-4">
+                <img src="@(!string.IsNullOrEmpty(Model.ProfilePictureUrl) ? Model.ProfilePictureUrl : "/images/default-logo.png")"
+                     class="rounded-circle img-thumbnail" alt="Profil Fotoğrafı" width="150" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Firstname">İsim</label>
+                <input asp-for="Firstname" name="Firstname" value="@Model.Firstname" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Lastname">Soyisim</label>
+                <input asp-for="Lastname" name="Lastname" value="@Model.Lastname" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UserName">Kullanıcı İsmi</label>
+                <input asp-for="UserName" name="UserName" value="@Model.UserName" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Address">Adres</label>
+                <input asp-for="Address" name="Address" value="@Model.Address" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProfilePicture">Profil Fotoğrafı </label>
+                <input asp-for="ProfilePicture" name="ProfilePicture" type="file" value="@Model.ProfilePicture" class="form-control" />
+                <input type="hidden" asp-for="ProfilePictureUrl" value="@Model.ProfilePictureUrl" />
+
+            </div>
+
+
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Güncelle</button>
+
+                
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

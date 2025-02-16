@@ -1,0 +1,93 @@
+﻿@model ANK19_ETicaretMVC.ViewModels.ProductViewModels.ProductDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Detaylar</h1>
+
+<div>
+    <h4>Ürün Detayları</h4>
+    <hr />
+    <dl class="row">
+        <!-- Temel Bilgiler -->
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Id)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Id)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Name)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Description)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Price)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Price)</dd>
+
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Stock)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Stock)</dd>
+
+        <dt class="col-sm-2">Fotoğraf</dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+            {
+                <img src="@Model.PhotoUrl" alt="@Model.Name" style="max-width: 200px;" />
+            }
+            else
+            {
+                <span>Ürün Fotoğrafı Bulunamadı</span>
+            }
+        </dd>
+
+        <!-- Seller Bilgileri -->
+        <dt class="col-sm-2">Satıcı</dt>
+        <dd class="col-sm-10">
+            @if (Model.Seller != null)
+            {
+                <div>
+                    <strong>Satıcı:</strong> @Model.Seller.CompanyName <br />
+                    <strong>İletişim Bilgisi:</strong> @Model.Seller.ContactInfo <br />
+                    <strong>Onaylanmış mı?:</strong> @(Model.Seller.IsApproved ? "Yes" : "No") <br />
+                    <strong>Fotoğraf:</strong>
+                    @if (!string.IsNullOrEmpty(Model.Seller.ProfilePictureUrl))
+                    {
+                        <img src="@Model.Seller.ProfilePictureUrl" alt="@Model.Seller.Name" style="max-width: 100px;" />
+                    }
+                    else
+                    {
+                        <span>Profil Fotoğrafı Bulunamadı</span>
+                    }
+                </div>
+            }
+            else
+            {
+                <span>Satıcı Bilgileri Bulunamadı</span>
+            }
+        </dd>
+
+        <!-- Kategoriler -->
+        <dt class="col-sm-2">Kategoriler</dt>
+        <dd class="col-sm-10">
+            @if (Model.Categories != null && Model.Categories.Any())
+            {
+                <ul>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <li>
+                            <strong>@category.Category.Name</strong> - @category.Category.Description
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <span>Seçilmiş Kategori Bulunamadı</span>
+            }
+        </dd>
+    </dl>
+</div>
+
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" }) |
+    <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+</div>

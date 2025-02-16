@@ -1,0 +1,63 @@
+﻿@using ANK19_ETicaretMVC.ViewModels.ContentViewModels
+@model IEnumerable<ContentViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    else if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+}
+
+<h1>İçerik Listesi</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="font-weight: bold; padding: 10px;">İçerik Numarası</th>
+                    <th style="font-weight: bold; padding: 10px;">İçerik Adı</th>
+                    <th style="font-weight: bold; padding: 10px;">İçerik</th>
+                    <th style="font-weight: bold; padding: 10px;">Son Güncellenme Tarihi</th>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Id
+                        </td>
+                        <td>
+                            @item.PageName
+                        </td>
+                        <td>
+                            @Html.Raw(item.ContentText)
+                        </td>
+                        <td>
+                            @item.UpdatedDate.ToString("yyyy-MM-dd")
+                        </td>
+                        <td>
+                            <a asp-area="Admin" asp-controller="Content" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Düzenle</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

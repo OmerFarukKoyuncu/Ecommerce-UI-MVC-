@@ -1,0 +1,75 @@
+﻿@using ANK19_ETicaretMVC.ViewModels.ProductViewModels
+@model ANK19_ETicaretMVC.Areas.Seller.Models.PromotionViewModels.PromotionViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_SellerLayout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>PromotionViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="ProductId" class="control-label"></label>
+                <select asp-for="ProductId" class="form-select">
+                    @if (ViewData["Products"] != null)
+                    {
+                        foreach (var product in (List<ProductViewModel>)ViewData["Products"])
+                        {
+                            <option value="@product.Id">@product.Name</option>
+                        }
+                    }
+                </select>
+
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PromotionName" class="control-label"></label>
+                <input asp-for="PromotionName" class="form-control" />
+                <span asp-validation-for="PromotionName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DiscountType" class="control-label"></label>
+                <select asp-for="DiscountType" class="form-control">
+ 
+                        <option value="0"> Percentage</option>
+                        <option value="1"> FixedAmount</option>
+                    
+                </select>
+                <span asp-validation-for="DiscountType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DiscountValue" class="control-label"></label>
+                <input asp-for="DiscountValue" class="form-control" />
+                <span asp-validation-for="DiscountValue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
